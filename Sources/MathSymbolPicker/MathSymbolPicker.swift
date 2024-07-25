@@ -213,7 +213,13 @@ public struct MathSymbolPicker: View {
         self.init(symbol: symbol, nullable: true)
     }
 
-    /// Private designated initializer.
+    
+        /// Description
+        /// - Parameters:
+        ///   - symbol: A binding to a `String` that represents the name of the selected symbol.
+        ///     When a symbol is picked, this binding is updated with the symbol's name. When no symbol
+        ///     is picked, the value will be `nil`.
+        ///   - nullable: boolean value to determinate the remove button visibility
     private init(symbol: Binding<String?>,
                  nullable: Bool) {
         _symbol = symbol
@@ -264,13 +270,13 @@ public struct MathSymbolPicker: View {
                 symbolGrid
 
                 if canDeleteIcon {
-                    //                    Divider()
-                    //                    HStack {
-                    //                        Spacer()
-                    //                        deleteButton
-                    //                            .padding(.horizontal)
-                    //                            .padding(.vertical, 8.0)
-                    //                    }
+                    Divider()
+                    HStack {
+                        Spacer()
+                        deleteButton
+                            .padding(.horizontal)
+                            .padding(.vertical, 8.0)
+                    }
                 }
             }
         #else
@@ -422,18 +428,7 @@ public struct MathSymbolPicker: View {
 #if DEBUG
     #Preview("Normal") {
         struct Preview: View {
-            @State private var symbol: String? = "square.and.arrow.up"
-            var body: some View {
-                MathSymbolPicker(symbol: $symbol)
-            }
-        }
-        return Preview()
-    }
-
-    #Preview("Filter Example") {
-        MathSymbol.shared.filter = { $0.contains(".circle") }
-        struct Preview: View {
-            @State private var symbol: String? = "square.and.arrow.up.circle.fill"
+            @State private var symbol: String? = "square.and.circle.fill"
             var body: some View {
                 MathSymbolPicker(symbol: $symbol)
             }

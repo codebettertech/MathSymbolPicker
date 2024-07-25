@@ -46,21 +46,26 @@ public class MathSymbol: @unchecked Sendable {
     }
 
     /// Array of the symbol name strings to be displayed.
-    private(set) var symbols: [String]
+    private(set) var symbols: [String] = []
 
     /// Array of all available symbol name strings.
-    private let allSymbols: [String]
+    private var allSymbols: [String] = []
 
     private init() {
-        if #available(iOS 17.0, macOS 14.0, tvOS 17.0, watchOS 10.0, visionOS 1.0, *) {
-            self.allSymbols = Self.fetchSymbols(fileName: "sfsymbol5")
-        } else if #available(iOS 16.0, macOS 13.0, tvOS 16.0, watchOS 9.0, *) {
-            self.allSymbols = Self.fetchSymbols(fileName: "sfsymbol4")
-        } else {
-            allSymbols = Self.fetchSymbols(fileName: "sfsymbol")
-        }
-        symbols = allSymbols
+        self.allSymbols = self.getCoreLibrarySymbols()
+        self.symbols = self.allSymbols
     }
+
+//    private init() {
+//        if #available(iOS 17.0, macOS 14.0, tvOS 17.0, watchOS 10.0, visionOS 1.0, *) {
+//            self.allSymbols = Self.fetchSymbols(fileName: "sfsymbol5")
+//        } else if #available(iOS 16.0, macOS 13.0, tvOS 16.0, watchOS 9.0, *) {
+//            self.allSymbols = Self.fetchSymbols(fileName: "sfsymbol4")
+//        } else {
+//            allSymbols = Self.fetchSymbols(fileName: "sfsymbol")
+//        }
+//        symbols = allSymbols
+//    }
 
     private static func fetchSymbols(fileName: String) -> [String] {
         guard let path = Bundle.module.path(forResource: fileName, ofType: "txt"),
@@ -75,11 +80,7 @@ public class MathSymbol: @unchecked Sendable {
             .map { String($0) }
     }
 
-    public static func getCoreLibrarySymbols() -> [String] {
-        return getAllSymbols()
-    }
-
-    private static func getAllSymbols() -> [String] {
+    private func getCoreLibrarySymbols() -> [String] {
         var allSymbols = [String]()
         if let bundle = Bundle(identifier: "com.apple.CoreGlyphs"),
            let resourcePath = bundle.path(forResource: "name_availability", ofType: "plist"),
