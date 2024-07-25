@@ -1,18 +1,58 @@
 //
-//  SymbolPicker.swift
-//  SymbolPicker
+//  MathSymbolPicker.swift
+//  MathSymbolPicker
 //
-//  Created by Yubo Qin on 2/14/22.
+//  Created by CodeBetter Inc. on 25/07/24.
 //
 
 import SwiftUI
 
+protocol MathSymbolPickerDelegate: NSObject {
+    init(symbol: Binding<String>)
+
+    init(symbol: Binding<String?>)
+
+    @ViewBuilder var searchableSymbolGrid: any View { get }
+
+    var symbolGrid: any View { get }
+
+    var deleteButton: any View { get }
+
+    var canDeleteIcon: Bool { get set }
+
+    var symbols: [String] { get set }
+
+    func mathSymbolPicker(_ picker: MathSymbolPicker, didSelect symbol: String)
+
+    var size: CGFloat { get set }
+
+    var symbolWeight: Font.Weight { get set }
+
+    var gridDimension: CGFloat { get set }
+
+    var symbolSize: CGFloat { get set }
+
+    var symbolCornerRadius: CGFloat { get set }
+
+    var unselectedItemBackgroundColor: Color { get set }
+
+    var selectedItemBackgroundColor: Color { get set }
+
+    var backgroundColor: Color { get set }
+
+    var foregroundColor: Color { get set }
+
+    var deleteButtonTextPadding: CGFloat { get set }
+
+    var deleteButtonTextVerticalPadding: CGFloat { get set }
+}
+
 /// A simple and cross-platform SFSymbol picker for SwiftUI.
-public struct SymbolPicker: View {
+public struct MathSymbolPicker: View {
     // MARK: - Static constants
 
     private let grid: [GridItem] = [
-        GridItem(.adaptive(minimum: Self.gridDimension, maximum: Self.gridDimension))
+        GridItem(.adaptive(minimum: Self.gridDimension, maximum: Self.gridDimension)),
     ]
 
     private enum Dimension {
@@ -71,6 +111,18 @@ public struct SymbolPicker: View {
         #endif
     }
 
+    static var symbolWeight: Font.Weight {
+        #if os(iOS)
+            return Font.Weight.medium
+        #elseif os(tvOS)
+            return Font.Weight.regular
+        #elseif os(macOS)
+            return Font.Weight.medium
+        #else
+            return Font.Weight.medium
+        #endif
+    }
+
     private static var symbolCornerRadius: CGFloat {
         #if os(iOS)
             return Dimension.extraSmall.size
@@ -107,6 +159,14 @@ public struct SymbolPicker: View {
         #endif
     }
 
+    public var foregroundColor: Color {
+        #if os(iOS)
+            return Color(UIColor.primaarySystemBackground)
+        #else
+            return .white
+        #endif
+    }
+
     private static var deleteButtonTextVerticalPadding: CGFloat {
         #if os(iOS)
             return 12.0
@@ -125,7 +185,7 @@ public struct SymbolPicker: View {
 
     // MARK: - Init
 
-    /// Initializes `SymbolPicker` with a string binding to the selected symbol name.
+    /// Initializes `MathSymbolPicker` with a string binding to the selected symbol name.
     ///
     /// - Parameters:
     ///   - symbol: A binding to a `String` that represents the name of the selected symbol.
@@ -143,7 +203,7 @@ public struct SymbolPicker: View {
             nullable: false)
     }
 
-    /// Initializes `SymbolPicker` with a nullable string binding to the selected symbol name.
+    /// Initializes `MathSymbolPicker` with a nullable string binding to the selected symbol name.
     ///
     /// - Parameters:
     ///   - symbol: A binding to a `String` that represents the name of the selected symbol.
@@ -172,7 +232,7 @@ public struct SymbolPicker: View {
         #elseif os(tvOS)
             VStack {
                 TextField(
-                    LocalizedString("search_placeholder"), text: $searchText)
+                    MathSymbolFunction.localizedString(key: "search_placeholder"), text: $searchText)
                     .padding(.horizontal, 8)
                     .autocapitalization(.none)
                     .disableAutocorrection(true)
@@ -186,7 +246,7 @@ public struct SymbolPicker: View {
         #elseif os(macOS)
             VStack(spacing: 0) {
                 HStack {
-                    TextField(LocalizedString("search_placeholder"), text: $searchText)
+                    TextField(MathSymbolFunction.localizedString(key: "search_placeholder"), text: $searchText)
                         .textFieldStyle(.plain)
                         .font(.system(size: 18.0))
                         .disableAutocorrection(true)
@@ -201,17 +261,16 @@ public struct SymbolPicker: View {
                     .buttonStyle(.borderless)
                 }.padding()
                 Divider()
-
                 symbolGrid
 
                 if canDeleteIcon {
-//                    Divider()
-//                    HStack {
-//                        Spacer()
-//                        deleteButton
-//                            .padding(.horizontal)
-//                            .padding(.vertical, 8.0)
-//                    }
+                    //                    Divider()
+                    //                    HStack {
+                    //                        Spacer()
+                    //                        deleteButton
+                    //                            .padding(.horizontal)
+                    //                            .padding(.vertical, 8.0)
+                    //                    }
                 }
             }
         #else
@@ -236,7 +295,14 @@ public struct SymbolPicker: View {
                         // dismiss()
                     } label: {
                         if thisSymbol == symbol {
-                            Image(systemName: thisSymbol).font(.system(size: 42))
+                            Image(systemName: thisSymbol)
+                                .font(
+                                    .system(size: Dimension.regular.size)
+                                        .weight(.thin)
+                                )
+                                .foregroundColor(
+                                    foregroundColor
+                                )
                             #if os(tvOS)
                                 .frame(minWidth: Self.gridDimension, minHeight: Self.gridDimension)
                             #else
@@ -251,7 +317,10 @@ public struct SymbolPicker: View {
                                 .foregroundColor(.white)
                         } else {
                             Image(systemName: thisSymbol)
-                                .font(.system(size: 42))
+                                .font(.system(size: Dimension.regular.size).weight(.thin))
+                                .foregroundColor(
+                                    foregroundColor
+                                )
                                 .frame(maxWidth: .infinity, minHeight: Self.gridDimension)
                                 .background(Self.unselectedItemBackgroundColor)
                                 .cornerRadius(Self.symbolCornerRadius)
@@ -265,6 +334,7 @@ public struct SymbolPicker: View {
                 }
             }
             .padding(.horizontal)
+            .padding(.vertical, 10)
 
             #if os(iOS) || os(visionOS)
                 /// Avoid last row being hidden.
@@ -281,7 +351,7 @@ public struct SymbolPicker: View {
             symbol = nil
             // dismiss()
         } label: {
-            Label(LocalizedString("remove_symbol"), systemImage: "trash")
+            Label(MathSymbolFunction.localizedString(key: "remove_symbol"), systemImage: "trash")
             #if !os(tvOS) && !os(macOS)
                 .frame(maxWidth: .infinity)
             #endif
@@ -324,7 +394,7 @@ public struct SymbolPicker: View {
                         Button {
                             dismiss()
                         } label: {
-                            Text(LocalizedString("cancel"))
+                            Text(localizedString("cancel"))
                         }
                     }
                 }
@@ -343,12 +413,8 @@ public struct SymbolPicker: View {
     }
 
     private var symbols: [String] {
-        Symbols.shared.symbols
+        MathSymbol.shared.symbols
     }
-}
-
-private func LocalizedString(_ key: String) -> String {
-    NSLocalizedString(key, bundle: .module, comment: "")
 }
 
 // MARK: - Debug
@@ -358,18 +424,18 @@ private func LocalizedString(_ key: String) -> String {
         struct Preview: View {
             @State private var symbol: String? = "square.and.arrow.up"
             var body: some View {
-                SymbolPicker(symbol: $symbol)
+                MathSymbolPicker(symbol: $symbol)
             }
         }
         return Preview()
     }
 
     #Preview("Filter Example") {
-        Symbols.shared.filter = { $0.contains(".circle") }
+        MathSymbol.shared.filter = { $0.contains(".circle") }
         struct Preview: View {
             @State private var symbol: String? = "square.and.arrow.up.circle.fill"
             var body: some View {
-                SymbolPicker(symbol: $symbol)
+                MathSymbolPicker(symbol: $symbol)
             }
         }
         return Preview()

@@ -1,7 +1,7 @@
 import XCTest
-@testable import PopoverMathSymbolPicker
+@testable import MathSymbolPicker
 
-final class PopoverMathSymbolPickerUITests: XCTestCase {
+final class MathSymbolPickerUITests: XCTestCase {
     func testUIExample() throws {
         // XCTest Documentation
         // https://developer.apple.com/documentation/xctest

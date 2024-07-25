@@ -3,8 +3,10 @@
 
 import PackageDescription
 
+let resourcePath: String = "Resources"
+
 let package = Package(
-    name: "PopoverMathSymbolPicker",
+    name: "MathSymbolPicker",
     defaultLocalization: "en",
     platforms: [
         .iOS(.v15),
@@ -13,16 +15,11 @@ let package = Package(
         .watchOS(.v8),
     ],
     products: [
-        // Products define the executables and libraries a package produces, making them visible to other packages.
-        .library(name: "PopoverMathSymbolPicker", type: .dynamic, targets: ["PopoverMathSymbolPicker"])],
+        .library(name: "MathSymbolPicker", type: .dynamic, targets: ["MathSymbolPicker"])],
     targets: [
         .target(
-            name: "PopoverMathSymbolPicker",
-            path: "Sources/SymbolPicker",
-            resources: [
-                .process("Resources")
-            ]),
-        .testTarget(name: "PopoverMathSymbolPickerTests", dependencies: ["PopoverMathSymbolPicker"]),
-        .testTarget(name: "PopoverMathSymbolPickerUITests", dependencies: ["PopoverMathSymbolPicker"])
+            name: "MathSymbolPicker"),
+        .testTarget(name: "MathSymbolPickerTests", dependencies: ["MathSymbolPicker"]),
+        .testTarget(name: "MathSymbolPickerUITests", dependencies: ["MathSymbolPicker"])
     ]
 )
