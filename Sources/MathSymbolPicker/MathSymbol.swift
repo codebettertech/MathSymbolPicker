@@ -32,8 +32,7 @@ protocol MathSymbolDelegate: NSObject {
 /// Simple singleton class for providing symbols list per platform availability.
 public class MathSymbol: @unchecked Sendable {
     /// Singleton instance.
-    public static let shared = MathSymbol()
-
+    public static let shared = MathSymbol.init()
     /// Filter closure that checks each symbol name string should be included.
     public var filter: ((String) -> Bool)? {
         didSet {
@@ -50,11 +49,20 @@ public class MathSymbol: @unchecked Sendable {
 
     /// Array of all available symbol name strings.
     private var allSymbols: [String] = []
+    private var allSymbolsName: [String] = []
+
+
+    public convenience init(symbols: [String]? = nil) {
+        self.init()
+    }
 
     private init() {
-        self.allSymbols = self.getCoreLibrarySymbols()
+        self.allSymbols = [_].countriesFlags.sorted()
+        self.allSymbolsName = [_].countriesNames.sorted()
         self.symbols = self.allSymbols
     }
+
+
 
     private func inititializer() {
         if #available(iOS 17.0, macOS 14.0, tvOS 17.0, watchOS 10.0, visionOS 1.0, *) {
@@ -79,6 +87,7 @@ public class MathSymbol: @unchecked Sendable {
             .split(separator: "\n")
             .map { String($0) }
     }
+
 
     private func getCoreLibrarySymbols() -> [String] {
         var allSymbols = [String]()

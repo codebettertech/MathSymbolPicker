@@ -84,16 +84,17 @@ struct MathSymbolSearchableField<LeadingAccessories: View, TrailingAccessories: 
                 Image(systemName: "magnifyingglass")
                     .padding(.leading, 16)
                     .foregroundStyle(.tertiary)
-                    .font(.system(size: 13))
-                    .frame(width: 16, height: 28)
+                    .font(.system(size: 13).weight(.light))
+                    .frame(width: 16, height: 32)
             }
             VStack {
                 TextField(label, text: $text, axis: axis)
                     .textFieldStyle(.plain)
                     .focused($isFocused)
                     .controlSize(.large)
+                    .font(.system(size: 13).weight(.light))
                     .padding(.horizontal, 12)
-                    .padding(.vertical, 6.5)
+                    .padding(.vertical, 8)
                     .foregroundStyle(.primary)
             }
             if clearable == true {
@@ -107,7 +108,7 @@ struct MathSymbolSearchableField<LeadingAccessories: View, TrailingAccessories: 
                 .opacity(text.isEmpty ? 0 : 1)
                 .disabled(text.isEmpty)
                 .padding(.trailing, 7)
-                .padding(.top, 7)
+                .padding(.top, 9)
             }
             Divider().padding(.trailing, 16)
             if trailingAccessories != nil {
@@ -115,12 +116,12 @@ struct MathSymbolSearchableField<LeadingAccessories: View, TrailingAccessories: 
                     .foregroundStyle(Color(.secondaryLabelColor))
                     .padding(.trailing, 16)
                     .foregroundStyle(.tertiary)
-                    .font(.system(size: 13))
-                    .frame(width: 16, height: 28)
+                    .font(.system(size: 13).weight(.light))
+                    .frame(width: 16, height: 32)
             }
         }
         .fixedSize(horizontal: false, vertical: true)
-        .frame(minHeight: 28)
+        .frame(minHeight: 32)
         .background(
             selectionBackground(isFocused)
                 .clipShape(RoundedRectangle(cornerRadius: 6))

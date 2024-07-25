@@ -139,7 +139,7 @@ public struct MathSymbolPicker: View {
         #if os(iOS)
             return Color(UIColor.systemBackground)
         #else
-            return Color.accentColor
+            return Color.white
         #endif
     }
 
@@ -147,7 +147,7 @@ public struct MathSymbolPicker: View {
         #if os(tvOS)
             return Color.gray.opacity(0.3)
         #else
-            return Color.accentColor
+            return Color.white
         #endif
     }
 
@@ -177,7 +177,6 @@ public struct MathSymbolPicker: View {
 
     // MARK: - Properties
 
-    @Binding public var symbol: String?
     @State private var searchText = ""
     @Environment(\.dismiss) private var dismiss
 
@@ -190,39 +189,17 @@ public struct MathSymbolPicker: View {
     /// - Parameters:
     ///   - symbol: A binding to a `String` that represents the name of the selected symbol.
     ///     When a symbol is picked, this binding is updated with the symbol's name.
-    public init(symbol: Binding<String>) {
-        self.init(
-            symbol: Binding {
-                symbol.wrappedValue
-            } set: { newValue in
-                /// As the `nullable` is set to `false`, this can not be `nil`
-                if let newValue {
-                    symbol.wrappedValue = newValue
-                }
-            },
-            nullable: false)
+    public init() {
+        self.init(nullable: false)
     }
 
-    /// Initializes `MathSymbolPicker` with a nullable string binding to the selected symbol name.
-    ///
+    /// Description
     /// - Parameters:
     ///   - symbol: A binding to a `String` that represents the name of the selected symbol.
     ///     When a symbol is picked, this binding is updated with the symbol's name. When no symbol
     ///     is picked, the value will be `nil`.
-    public init(symbol: Binding<String?>) {
-        self.init(symbol: symbol, nullable: true)
-    }
-
-    
-        /// Description
-        /// - Parameters:
-        ///   - symbol: A binding to a `String` that represents the name of the selected symbol.
-        ///     When a symbol is picked, this binding is updated with the symbol's name. When no symbol
-        ///     is picked, the value will be `nil`.
-        ///   - nullable: boolean value to determinate the remove button visibility
-    private init(symbol: Binding<String?>,
-                 nullable: Bool) {
-        _symbol = symbol
+    ///   - nullable: boolean value to determinate the remove button visibility
+    private init(nullable: Bool) {
         self.nullable = nullable
     }
 
@@ -256,9 +233,8 @@ public struct MathSymbolPicker: View {
                         .textFieldStyle(.plain)
                         .font(.system(size: 18.0))
                         .disableAutocorrection(true)
-
                     Button {
-                        // dismiss()
+                        dismiss()
                     } label: {
                         Image(systemName: "xmark.circle.fill")
                             .resizable()
@@ -267,6 +243,7 @@ public struct MathSymbolPicker: View {
                     .buttonStyle(.borderless)
                 }.padding()
                 Divider()
+//                MathSymbolSearchableView(searchText: $searchText)
                 symbolGrid
 
                 if canDeleteIcon {
@@ -295,43 +272,33 @@ public struct MathSymbolPicker: View {
             LazyVGrid(columns: [GridItem(.adaptive(minimum: Self.gridDimension, maximum: Self.gridDimension))]
             ) {
                 ForEach(symbols.filter { searchText.isEmpty ? true : $0.localizedCaseInsensitiveContains(searchText) }, id: \.self) {
-                    thisSymbol in
+                    symbol in
                     Button {
-                        symbol = thisSymbol
-                        // dismiss()
+                        dismiss()
                     } label: {
-                        if thisSymbol == symbol {
-                            Image(systemName: thisSymbol)
-                                .font(
-                                    .system(size: Dimension.regular.size)
-                                        .weight(.thin)
-                                )
-                                .foregroundColor(
-                                    foregroundColor
-                                )
-                            #if os(tvOS)
-                                .frame(minWidth: Self.gridDimension, minHeight: Self.gridDimension)
-                            #else
-                                .frame(maxWidth: .infinity, minHeight: Self.gridDimension)
-                            #endif
-                                .background(Self.selectedItemBackgroundColor)
-                            #if os(visionOS)
-                                .clipShape(Circle())
-                            #else
-                                .cornerRadius(Self.symbolCornerRadius)
-                            #endif
-                                .foregroundColor(.white)
-                        } else {
-                            Image(systemName: thisSymbol)
-                                .font(.system(size: Dimension.regular.size).weight(.thin))
-                                .foregroundColor(
-                                    foregroundColor
-                                )
-                                .frame(maxWidth: .infinity, minHeight: Self.gridDimension)
-                                .background(Self.unselectedItemBackgroundColor)
-                                .cornerRadius(Self.symbolCornerRadius)
-                                .foregroundColor(.primary)
-                        }
+                        Text(symbol)
+                            .font(
+                                .system(size: Dimension.large.size)
+                                    .weight(.thin)
+                            )
+                            .foregroundColor(
+                                foregroundColor
+                            )
+                            .frame(maxWidth: .infinity, minHeight: Self.gridDimension)
+                            .background(Self.unselectedItemBackgroundColor)
+                            .cornerRadius(Self.symbolCornerRadius)
+                        #if os(tvOS)
+                            .frame(minWidth: Self.gridDimension, minHeight: Self.gridDimension)
+                        #else
+                            .frame(maxWidth: .infinity, minHeight: Self.gridDimension)
+                        #endif
+                            .background(Self.selectedItemBackgroundColor)
+                        #if os(visionOS)
+                            .clipShape(Circle())
+                        #else
+                            .cornerRadius(Self.symbolCornerRadius)
+                        #endif
+                            .foregroundColor(.white)
                     }
                     .buttonStyle(.plain)
                     #if os(iOS)
@@ -354,8 +321,7 @@ public struct MathSymbolPicker: View {
 
     private var deleteButton: some View {
         Button(role: .destructive) {
-            symbol = nil
-            // dismiss()
+            dismiss()
         } label: {
             Label(MathSymbolFunction.localizedString(key: "remove_symbol"), systemImage: "trash")
             #if !os(tvOS) && !os(macOS)
@@ -415,7 +381,7 @@ public struct MathSymbolPicker: View {
     }
 
     private var canDeleteIcon: Bool {
-        nullable && symbol != nil
+        nullable
     }
 
     private var symbols: [String] {
@@ -428,9 +394,8 @@ public struct MathSymbolPicker: View {
 #if DEBUG
     #Preview("Normal") {
         struct Preview: View {
-            @State private var symbol: String? = "square.and.circle.fill"
             var body: some View {
-                MathSymbolPicker(symbol: $symbol)
+                MathSymbolPicker()
             }
         }
         return Preview()
