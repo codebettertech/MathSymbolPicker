@@ -56,16 +56,16 @@ public class MathSymbol: @unchecked Sendable {
         self.symbols = self.allSymbols
     }
 
-//    private init() {
-//        if #available(iOS 17.0, macOS 14.0, tvOS 17.0, watchOS 10.0, visionOS 1.0, *) {
-//            self.allSymbols = Self.fetchSymbols(fileName: "sfsymbol5")
-//        } else if #available(iOS 16.0, macOS 13.0, tvOS 16.0, watchOS 9.0, *) {
-//            self.allSymbols = Self.fetchSymbols(fileName: "sfsymbol4")
-//        } else {
-//            allSymbols = Self.fetchSymbols(fileName: "sfsymbol")
-//        }
-//        symbols = allSymbols
-//    }
+    private func inititializer() {
+        if #available(iOS 17.0, macOS 14.0, tvOS 17.0, watchOS 10.0, visionOS 1.0, *) {
+            self.allSymbols = Self.fetchSymbols(fileName: "sfsymbol5")
+        } else if #available(iOS 16.0, macOS 13.0, tvOS 16.0, watchOS 9.0, *) {
+            self.allSymbols = Self.fetchSymbols(fileName: "sfsymbol4")
+        } else {
+            allSymbols = Self.fetchSymbols(fileName: "sfsymbol")
+        }
+        symbols = allSymbols
+    }
 
     private static func fetchSymbols(fileName: String) -> [String] {
         guard let path = Bundle.module.path(forResource: fileName, ofType: "txt"),
