@@ -8,3 +8,4 @@
 extension String {
     static let Empty = ""
 }
+

@@ -31,3 +31,4 @@ struct MathSymbolSearchableView: View {
     }
     return Preview()
 }
+

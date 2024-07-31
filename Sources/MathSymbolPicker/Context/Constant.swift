@@ -7,5 +7,4 @@
 
 public final class Constant {
     static let mathSymbols = ["+", "-", "*", "/", "^", "√", "sin", "cos", "tan", "log", "ln", "e", "pi"]
-    static let resourcePath: String = "../../"
 }

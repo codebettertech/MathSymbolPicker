@@ -15,11 +15,26 @@ let package = Package(
         .watchOS(.v8),
     ],
     products: [
-        .library(name: "MathSymbolPicker", type: .dynamic, targets: ["MathSymbolPicker"])],
+        .library(
+            name: "MathSymbolPicker",
+            type: .dynamic,
+            targets: ["MathSymbolPicker"]
+        )
+    ],
     targets: [
         .target(
-            name: "MathSymbolPicker"),
-        .testTarget(name: "MathSymbolPickerTests", dependencies: ["MathSymbolPicker"]),
-        .testTarget(name: "MathSymbolPickerUITests", dependencies: ["MathSymbolPicker"])
+            name: "MathSymbolPicker",
+            dependencies: [],
+            path: "Sources/MathSymbolPicker",
+            resources: [.process("Resources")]
+        ),
+        .testTarget(
+            name: "MathSymbolPickerTests",
+            dependencies: ["MathSymbolPicker"]
+        ),
+        .testTarget(
+            name: "MathSymbolPickerUITests",
+            dependencies: ["MathSymbolPicker"]
+        ),
     ]
 )
