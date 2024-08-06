@@ -18,9 +18,9 @@
             skipped = "NO">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "PopoverMathSymbolPickerTests"
-               BuildableName = "PopoverMathSymbolPickerTests"
-               BlueprintName = "PopoverMathSymbolPickerTests"
+               BlueprintIdentifier = "MathSymbolPickerTests"
+               BuildableName = "MathSymbolPickerTests"
+               BlueprintName = "MathSymbolPickerTests"
                ReferencedContainer = "container:">
             </BuildableReference>
          </TestableReference>

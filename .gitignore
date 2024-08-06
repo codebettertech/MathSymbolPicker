@@ -95,3 +95,5 @@ Icon
 .swiftpm/
 .build/
 .git/
+
+.DS_Store
