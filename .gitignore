@@ -92,3 +92,6 @@ Icon?
 Icon
 
 /**/*/.DS_Store
+.swiftpm/
+.build/
+.git/
