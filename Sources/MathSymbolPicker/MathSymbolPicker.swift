@@ -161,7 +161,7 @@ public struct MathSymbolPicker: View {
 
     public var foregroundColor: Color {
         #if os(iOS)
-            return Color(UIColor.primaarySystemBackground)
+            return Color(UIColor.secondarySystemBackground)
         #else
             return .white
         #endif
@@ -227,6 +227,7 @@ public struct MathSymbolPicker: View {
 
     // MARK: - View Components
 
+    @available(macOS 14.0, *)
     @ViewBuilder
     private var searchableSymbolGrid: some View {
         #if os(iOS)
@@ -268,8 +269,7 @@ public struct MathSymbolPicker: View {
                 .padding()
                 Divider()
 
-                    HorizontalScrollView()
-
+                HorizontalScrollablePickerView()
 
                 symbolGrid
 
@@ -375,48 +375,52 @@ public struct MathSymbolPicker: View {
     }
 
     public var body: some View {
-        #if !os(macOS)
+        if #available(macOS 14.0, *) {
+#if !os(macOS)
             NavigationView {
                 ZStack {
-                    #if os(iOS)
-                        Self.backgroundColor.edgesIgnoringSafeArea(.all)
-                    #endif
+#if os(iOS)
+                    Self.backgroundColor.edgesIgnoringSafeArea(.all)
+#endif
                     searchableSymbolGrid
-
-                    #if os(iOS) || os(visionOS)
-                        if canDeleteIcon {
-                            VStack {
-                                Spacer()
-
-                                deleteButton
-                                    .padding()
-                                    .background(.regularMaterial)
-                            }
+    
+#if os(iOS) || os(visionOS)
+                    if canDeleteIcon {
+                        VStack {
+                            Spacer()
+    
+                            deleteButton
+                                .padding()
+                                .background(.regularMaterial)
                         }
-                    #endif
+                    }
+#endif
                 }
-                #if os(iOS)
+#if os(iOS)
                 .navigationBarTitleDisplayMode(.inline)
-                #endif
-                #if !os(tvOS)
-                /// tvOS can use back button on remote
+#endif
+#if !os(tvOS)
+                    /// tvOS can use back button on remote
                 .toolbar {
                     ToolbarItem(placement: .cancellationAction) {
                         Button {
                             dismiss()
                         } label: {
-                            Text(localizedString("cancel"))
+                            Text("cancel")
                         }
                     }
                 }
-                #endif
+#endif
             }
             .navigationViewStyle(.stack)
-        #else
+#else
             searchableSymbolGrid
                 .frame(width: 460, height: 640, alignment: .center)
                 .background(.regularMaterial)
-        #endif
+#endif
+        } else {
+                // Fallback on earlier versions
+        }
     }
 
     private var canDeleteIcon: Bool {
@@ -430,14 +434,12 @@ public struct MathSymbolPicker: View {
 
 // MARK: - Debug
 
-#if DEBUG
-    #Preview("Normal") {
-        struct Preview: View {
-            @State private var symbol: String? = "square.and.circle.fill"
-            var body: some View {
-                MathSymbolPicker(symbol: $symbol)
-            }
+#Preview("Normal") {
+    struct Preview: View {
+        @State private var symbol: String? = "square.and.circle.fill"
+        var body: some View {
+            MathSymbolPicker(symbol: $symbol)
         }
-        return Preview()
     }
-#endif
+    return Preview()
+}

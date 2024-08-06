@@ -1,8 +1,14 @@
 {
   "sourceLanguage" : "en",
   "strings" : {
+    "" : {
+
+    },
+    "All" : {
+
+    },
     "cancel" : {
-      "extractionState" : "migrated",
+      "extractionState" : "manual",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -47,11 +53,8 @@
         }
       }
     },
-    "First Tab!" : {
-
-    },
     "remove_symbol" : {
-      "extractionState" : "migrated",
+      "extractionState" : "manual",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -74,7 +77,7 @@
       }
     },
     "search_placeholder" : {
-      "extractionState" : "migrated",
+      "extractionState" : "manual",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -95,9 +98,6 @@
           }
         }
       }
-    },
-    "Second Tab!" : {
-
     },
     "sf_symbol_picker" : {
       "extractionState" : "manual",
@@ -121,18 +121,6 @@
           }
         }
       }
-    },
-    "Tab %lld" : {
-
-    },
-    "Third Tab!" : {
-
-    },
-    "Tutti" : {
-
-    },
-    "w" : {
-
     }
   },
   "version" : "1.0"
