@@ -5,7 +5,7 @@
 //  Created by christian on 31/07/24.
 //
 
-import SwiftUICore
+import SwiftUI
 
 /// The injectReader modifier function
 ///
